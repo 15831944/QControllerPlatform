@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <string>
 #include <set>
+#include "common.h"
 
 using namespace std;
 
@@ -120,11 +121,19 @@ __attribute__ ((unused)) static const string currentDateTime()
 	struct tm tstruct;
 	char buf[24];
 	tstruct = *localtime(&now);
-	strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
+    int nYear = tstruct.tm_year + 1900;
+    int nMonth = tstruct.tm_mon + 1;
+    int nDay = tstruct.tm_mday;
+    int nHour = tstruct.tm_hour;
+    int nMinute = tstruct.tm_min;
+    int nSecond = tstruct.tm_sec;
+    sprintf(buf,"%d-%d-%d %d:%d:%d", nYear,nMonth,nDay,nHour,nMinute,nSecond);
+
+    //strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
 	return buf;
 }
 
-__attribute__ ((unused)) static const void currentDateTimeNum(int &nYear, int &nMonth, int &nDay, int &nHour,
+__attribute__ ((unused)) static void currentDateTimeNum(int &nYear, int &nMonth, int &nDay, int &nHour,
 		int &nMinute, int &nSecond)
 {
 	time_t now = time(0);
@@ -136,7 +145,7 @@ __attribute__ ((unused)) static const void currentDateTimeNum(int &nYear, int &n
 	nDay = tstruct.tm_mday;
 	nHour = tstruct.tm_hour;
 	nMinute = tstruct.tm_min;
-	nSecond = tstruct.tm_sec;
+    nSecond = tstruct.tm_sec;
 	printf("%d %d %d %d %d %d\n", nYear, nMonth, nDay, nHour, nMinute, nSecond);
 }
 
@@ -150,7 +159,7 @@ __attribute__ ((unused)) static const string currentDate()
 	return buf;
 }
 
-__attribute__ ((unused)) static const int currentDateNum()
+__attribute__ ((unused)) static int currentDateNum()
 {
 	int nDate;
 	time_t now = time(0);
@@ -184,13 +193,13 @@ __attribute__ ((unused)) static std::string format(const char* fmt, ...)
 	va_list vl;
 
 	va_start(vl, fmt);
-	int size = vsnprintf(0, 0, fmt, vl) + sizeof('\0');
+    int size = vsnprintf(0, 0, fmt, vl) + (int)sizeof('\0');
 	va_end(vl);
 
 	char buffer[size];
 
 	va_start(vl, fmt);
-	size = vsnprintf(buffer, size, fmt, vl);
+    size = vsnprintf(buffer, (ULONG)size, fmt, vl);
 	va_end(vl);
 
 	return std::string(buffer, size);

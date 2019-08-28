@@ -7,6 +7,8 @@ namespace Ui {
 class MainWindowLegalAssistant;
 }
 
+class CWebWidget;
+
 class MainWindowLegalAssistant : public QMainWindow
 {
     Q_OBJECT
@@ -16,7 +18,11 @@ public:
     ~MainWindowLegalAssistant();
 
 private:
+    void init();
+
+private:
     Ui::MainWindowLegalAssistant *ui;
+    CWebWidget *webWidget;
 };
 
 #endif // MAINWINDOWLEGALASSISTANT_H

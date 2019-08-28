@@ -131,11 +131,6 @@ int main(int argc, char* argv[])
 {
     int nControllerMsqKey;
 
-#ifdef GDB
-	_log("\n<============= ^_____^ Run GDB Mode~~~~~~~~~ =============>\n", __progname);
-	runService(clock());
-	return 0;
-#endif
 
     QApplication a(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);

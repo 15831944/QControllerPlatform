@@ -11,6 +11,7 @@
 #include <typeinfo>
 #include <iostream>
 #include "LogHandler.h"
+#include <QtWebView/QtWebView>
 
 using namespace std;
 
@@ -35,6 +36,7 @@ int CController::onCreated(void* nMsqKey)
 int CController::onInitial(void* szConfPath)
 {
 	string strConfPath = reinterpret_cast<const char*>(szConfPath);
+    QtWebView::initialize();
 	return 0;
 }
 

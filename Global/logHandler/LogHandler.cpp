@@ -6,9 +6,6 @@
  */
 
 #include <sys/stat.h>
-//#include <boost/thread/mutex.hpp>
-//#include <boost/thread/thread.hpp>
-//#include <boost/thread/locks.hpp>
 #include <syslog.h>
 #include <fstream>
 #include <stdio.h>
@@ -25,8 +22,6 @@ string mstrLogPath;
 string mstrLogDate;
 
 extern char *__progname;
-
-//boost::mutex the_mutex;
 
 inline bool fileExists(const string& filename)
 {
@@ -65,31 +60,29 @@ inline void writeLog(int nSize, const char *pLog)
 	if(fs.is_open())
 	{
 		fs.write(pLog, nSize).flush();
-		//fs << pLog << endl;
 	}
 }
 
 void _log(const char* format, ...)
 {
-//	boost::mutex::scoped_lock lock(the_mutex);
 	va_list vl;
 	va_start(vl, format);
-	int size = vsnprintf(0, 0, format, vl) + sizeof('\0');
+    int size = vsnprintf(0, 0, format, vl) + (int)sizeof('\0');
 	va_end(vl);
 
 	char buffer[size];
 
 	va_start(vl, format);
-	size = vsnprintf(buffer, size, format, vl);
+    size = vsnprintf(buffer, (ULONG)size, format, vl);
 	va_end(vl);
 
-	string strLog = string(buffer, size);
+    string strLog = string(buffer, (ULONG)size);
 
 	strLog = currentDateTime() + " : " + strLog + "\n";
 
 	writeLog(strLog.length(), strLog.c_str());
 
-	printf("%s", strLog.c_str());
+    //printf("%s", strLog.c_str());
     qDebug() << strLog.c_str() << endl;
 }
 
@@ -121,16 +114,16 @@ void _error(const char* format, ...)
 {
 	va_list vl;
 	va_start(vl, format);
-	int size = vsnprintf(0, 0, format, vl) + sizeof('\0');
+    int size = vsnprintf(0, 0, format, vl) + (int)sizeof('\0');
 	va_end(vl);
 
 	char buffer[size];
 
 	va_start(vl, format);
-	size = vsnprintf(buffer, size, format, vl);
+    size = vsnprintf(buffer, (ULONG)size, format, vl);
 	va_end(vl);
 
-	string strLog = string(buffer, size);
+    string strLog = string(buffer, (ULONG)size);
 
 	strLog = currentDateTime() + " : " + strLog + "\n";
 

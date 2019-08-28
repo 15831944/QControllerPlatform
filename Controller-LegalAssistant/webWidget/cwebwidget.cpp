@@ -1,6 +1,6 @@
 #include "cwebwidget.h"
 #include <QUrl>
-#include "ui_mainwindow.h"
+
 
 CWebWidget::CWebWidget(QWidget *parent) : QWebEngineView(parent)
 {

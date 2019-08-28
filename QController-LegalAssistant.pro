@@ -4,7 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui webenginewidgets webview multimedia multimediawidgets
+
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,6 +29,7 @@ CONFIG += c++11
 SOURCES += \
         Controller-LegalAssistant/controllerHandler/CController.cpp \
         Controller-LegalAssistant/mainwindowlegalassistant.cpp \
+        Controller-LegalAssistant/webWidget/cwebwidget.cpp \
         Global/application/CApplication.cpp \
         Global/cmpHandler/CCmpHandler.cpp \
         Global/configHandler/CConfig.cpp \
@@ -49,9 +52,11 @@ SOURCES += \
         Global/socketHandler/CSocketServer.cpp \
         Global/threadHandler/CThreadHandler.cpp
 
+
 HEADERS += \
         Controller-LegalAssistant/controllerHandler/CController.h \
         Controller-LegalAssistant/mainwindowlegalassistant.h \
+        Controller-LegalAssistant/webWidget/cwebwidget.h \
         Global/application/CApplication.h \
         Global/application/Message.h \
         Global/cmpHandler/CCmpHandler.h \
@@ -84,6 +89,7 @@ HEADERS += \
         Global/socketHandler/IReceiver.h \
         Global/threadHandler/CThreadHandler.h
 
+
 INCLUDEPATH += \
         Controller-LegalAssistant/controllerHandler \
         Controller-LegalAssistant \
@@ -97,7 +103,8 @@ INCLUDEPATH += \
         Global/dataHandler \
         Global/configHandler \
         Global/cmpHandler \
-        Global/threadHandler
+        Global/threadHandler \
+        Controller-LegalAssistant/webWidget
 
 LIBS += -lrt
 # Default rules for deployment.
@@ -126,3 +133,7 @@ defineTest(copyToDestDir) {
 }
 
 copyToDestDir($$PWD/Controller-LegalAssistant/QController-LegalAssistant.conf, $$PWD/Controller-LegalAssistant/bin)
+
+DISTFILES += \
+    html/hop.ogg \
+    html/index.htm

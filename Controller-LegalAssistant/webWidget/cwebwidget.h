@@ -1,9 +1,8 @@
 #ifndef CWEBWIDGET_H
 #define CWEBWIDGET_H
 
-#include <QWidget>
-#include <QWebEngineView>
 
+#include <QWebEngineView>
 
 
 class CWebWidget : public QWebEngineView
@@ -12,8 +11,6 @@ class CWebWidget : public QWebEngineView
 public:
     explicit CWebWidget(QWidget *parent = nullptr);
     void loadURL(const char *strURL);
-
-
 
 signals:
 
