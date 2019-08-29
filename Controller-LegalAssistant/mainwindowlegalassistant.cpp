@@ -16,6 +16,11 @@ MainWindowLegalAssistant::MainWindowLegalAssistant(QWidget *parent) :
 
 MainWindowLegalAssistant::~MainWindowLegalAssistant()
 {
+    if(0 != extWindow)
+    {
+        extWindow->close();
+        delete extWindow;
+    }
     delete ui;
 }
 
@@ -23,7 +28,7 @@ void MainWindowLegalAssistant::init()
 {
     webWidget->setStyleSheet("QWidget { background: white; }");
     webWidget->load(QUrl::fromLocalFile("/opt/html/index.htm"));
-    webWidget->resize(200,200);
+
     webWidget->show();
 
     QWidget *wLayout = new QWidget(this);
@@ -43,9 +48,9 @@ void MainWindowLegalAssistant::init()
     lgrid->addWidget(wTemp2, 0, 1, 1, 1);
     lgrid->addWidget(webWidget, 0, 2, 1, 1);
 
-    QWindow *window = QWindow::fromWinId(0x03800003);
-    window->setFlags(Qt::FramelessWindowHint);
-    QWidget *widget = QWidget::createWindowContainer(window);
+    extWindow = QWindow::fromWinId(0x03c00003);
+    extWindow->setFlags(Qt::FramelessWindowHint);
+    QWidget *widget = QWidget::createWindowContainer(extWindow);
     lgrid->addWidget(widget, 0, 0, 1, 1);
 
 

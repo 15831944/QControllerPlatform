@@ -28,6 +28,7 @@ CONFIG += c++11
 
 SOURCES += \
         Controller-LegalAssistant/controllerHandler/CController.cpp \
+        Controller-LegalAssistant/assistantwindow.cpp \
         Controller-LegalAssistant/mainwindowlegalassistant.cpp \
         Controller-LegalAssistant/webWidget/cwebwidget.cpp \
         Global/application/CApplication.cpp \
@@ -50,11 +51,13 @@ SOURCES += \
         Global/socketHandler/CSocket.cpp \
         Global/socketHandler/CSocketClient.cpp \
         Global/socketHandler/CSocketServer.cpp \
-        Global/threadHandler/CThreadHandler.cpp
+        Global/threadHandler/CThreadHandler.cpp \
+        Global/wmctrl/wmctrl.c
 
 
 HEADERS += \
         Controller-LegalAssistant/controllerHandler/CController.h \
+        Controller-LegalAssistant/assistantwindow.h \
         Controller-LegalAssistant/mainwindowlegalassistant.h \
         Controller-LegalAssistant/webWidget/cwebwidget.h \
         Global/application/CApplication.h \
@@ -93,6 +96,7 @@ HEADERS += \
 INCLUDEPATH += \
         Controller-LegalAssistant/controllerHandler \
         Controller-LegalAssistant \
+        Controller-LegalAssistant/webWidget \
         Global/application \
         Global/messageHandler \
         Global/logHandler \
@@ -104,16 +108,23 @@ INCLUDEPATH += \
         Global/configHandler \
         Global/cmpHandler \
         Global/threadHandler \
-        Controller-LegalAssistant/webWidget
+        /usr/include/glib-2.0 \
+        /usr/lib/glib-2.0/include \
+        /usr/lib/x86_64-linux-gnu/glib-2.0/include
 
-LIBS += -lrt
+
+#apt-get install libxmu-dev
+
+LIBS += -lrt -lm -lglib-2.0 -lX11 -lXmu -L/usr/lib
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
-    Controller-LegalAssistant/mainwindowlegalassistant.ui
+    Controller-LegalAssistant/form/assistantwindow.ui \
+    Controller-LegalAssistant/form/mainwindowlegalassistant.ui
 
 # copies the given files to the destination directory
 defineTest(copyToDestDir) {
@@ -132,7 +143,7 @@ defineTest(copyToDestDir) {
     export(QMAKE_POST_LINK)
 }
 
-copyToDestDir($$PWD/Controller-LegalAssistant/QController-LegalAssistant.conf, $$PWD/Controller-LegalAssistant/bin)
+#copyToDestDir($$PWD/Controller-LegalAssistant/QController-LegalAssistant.conf, $$PWD/Controller-LegalAssistant/bin)
 
 DISTFILES += \
     html/hop.ogg \
