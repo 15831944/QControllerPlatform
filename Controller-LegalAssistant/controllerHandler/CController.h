@@ -11,6 +11,7 @@
 #include "CApplication.h"
 
 class MainWindowLegalAssistant;
+class AssistantWindow;
 
 class CController: public CApplication
 {
@@ -27,6 +28,6 @@ protected:
 
 private:
     MainWindowLegalAssistant *mainWindow;
-
+    AssistantWindow *assisant;
 
 };

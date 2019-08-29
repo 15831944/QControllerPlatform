@@ -12,6 +12,7 @@
 #include <iostream>
 #include "LogHandler.h"
 #include <QtWebView/QtWebView>
+#include "assistantwindow.h"
 
 using namespace std;
 
@@ -30,6 +31,7 @@ int CController::onCreated(void* nMsqKey)
 	// reinterpret_cast 將一種型態的指標轉換為另一種型態的指標
 	int nKey = *(reinterpret_cast<int*>(nMsqKey));
     mainWindow = new MainWindowLegalAssistant();
+    assisant = new AssistantWindow();
 	return nKey;
 }
 
@@ -44,6 +46,7 @@ int CController::onFinish(void* nMsqKey)
 {
 	int nKey = *(reinterpret_cast<int*>(nMsqKey));
     delete mainWindow;
+    delete assisant;
 	return nKey;
 }
 
@@ -58,5 +61,6 @@ void CController::onHandleMessage(Message &message)
 void CController::showMainWindow()
 {
     _log("[CController] showMainWindow");
-    mainWindow->show();
+    //mainWindow->show();
+    assisant->show();
 }

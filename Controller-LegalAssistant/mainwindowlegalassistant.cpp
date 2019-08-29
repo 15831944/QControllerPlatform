@@ -7,10 +7,9 @@
 
 MainWindowLegalAssistant::MainWindowLegalAssistant(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindowLegalAssistant)
+    ui(new Ui::MainWindowLegalAssistant),webWidget(new CWebWidget(this)),webWidget2(new CWebWidget(this))
 {
     ui->setupUi(this);
-    webWidget = new CWebWidget(this);
     init();
 }
 
@@ -28,7 +27,6 @@ void MainWindowLegalAssistant::init()
 {
     webWidget->setStyleSheet("QWidget { background: white; }");
     webWidget->load(QUrl::fromLocalFile("/opt/html/index.htm"));
-
     webWidget->show();
 
     QWidget *wLayout = new QWidget(this);

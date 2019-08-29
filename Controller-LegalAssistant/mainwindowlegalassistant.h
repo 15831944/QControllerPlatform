@@ -23,6 +23,7 @@ private:
 private:
     Ui::MainWindowLegalAssistant *ui;
     CWebWidget *webWidget;
+    CWebWidget *webWidget2;
     QWindow *extWindow;
 };
 

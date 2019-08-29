@@ -7,6 +7,8 @@ namespace Ui {
 class AssistantWindow;
 }
 
+class CWebWidget;
+
 class AssistantWindow : public QMainWindow
 {
     Q_OBJECT
@@ -16,7 +18,11 @@ public:
     ~AssistantWindow();
 
 private:
+    void initLayout();
+private:
     Ui::AssistantWindow *ui;
+    CWebWidget *webTalk;
+    CWebWidget *webBook;
 };
 
 #endif // ASSISTANTWINDOW_H
