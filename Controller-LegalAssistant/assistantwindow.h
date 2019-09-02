@@ -23,6 +23,7 @@ private:
     Ui::AssistantWindow *ui;
     CWebWidget *webTalk;
     CWebWidget *webBook;
+    CWebWidget *webNews;
 };
 
 #endif // ASSISTANTWINDOW_H

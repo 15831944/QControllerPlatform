@@ -4,17 +4,22 @@
 #include <QHBoxLayout>
 #include <QListWidget>
 #include <QPushButton>
+#include <QMediaPlayer>
+#include <QVideoWidget>
 #include "cwebwidget.h"
+#include <Qt>
 
 AssistantWindow::AssistantWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::AssistantWindow),webTalk(new CWebWidget(this)),webBook(new CWebWidget(this))
+    ui(new Ui::AssistantWindow),webTalk(new CWebWidget(this)),webBook(new CWebWidget(this)),webNews(new CWebWidget(this))
 {
     ui->setupUi(this);
-    webTalk->resize(600,800);
-    webBook->resize(this->geometry().width() + 500,this->geometry().height());
+    webTalk->resize(600,600);
+    webBook->resize(this->geometry().width() + 500,this->geometry().height()+150);
     webTalk->load(QUrl::fromLocalFile("/opt/html/index.htm"));
     webBook->load(QUrl::fromLocalFile("/opt/html/left.htm"));
+    webNews->load(QUrl::fromLocalFile("/opt/html/news.htm"));
+    webNews->resize(600,600);
     initLayout();
 }
 
@@ -29,31 +34,19 @@ void AssistantWindow::initLayout()
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox = new QHBoxLayout(win);
 
-//    QListWidget *lw = new QListWidget(this);
-//    lw->addItem("The Omen");
-//    lw->addItem("The Exorcist");
-//    lw->addItem("Notes on a scandal");
-//    lw->addItem("Fargo");
-//    lw->addItem("Capote");
-
-    vbox->setSpacing(3);
-    vbox->addStretch(1);
+   // vbox->setSpacing(1);
+  //  vbox->addStretch(1);
+    vbox->addWidget(webNews);
     vbox->addWidget(webTalk);
-    vbox->addStretch(1);
+  //  vbox->addStretch(1);
+    vbox->setAlignment(webTalk,Qt::AlignBottom);
 
     hbox->addWidget(webBook);
     hbox->addSpacing(2);
     hbox->addLayout(vbox);
 
-    win->setStyleSheet("QWidget { background: white; }");
+    win->setStyleSheet("QWidget { background-image:url(\"/opt/html/bg.jpg\"); background-position: center;}");
     setCentralWidget(win);
 
-
-    int h = win->geometry().height();
-    int w = win->geometry().width();
-        int x = win->geometry().x();
-        int y = win->geometry().y();
-
-        webTalk->setGeometry( w - 800, 100, 800, 800 );
 
 }
