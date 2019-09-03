@@ -19,6 +19,7 @@ public:
 
 private:
     void initLayout();
+    void initWeb(CWebWidget *webwidget);
 private:
     Ui::AssistantWindow *ui;
     CWebWidget *webTalk;
