@@ -1,5 +1,3 @@
-#include "assistantwindow.h"
-#include "ui_assistantwindow.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QListWidget>
@@ -9,16 +7,23 @@
 #include <QWebEngineSettings>
 #include <QTextToSpeech>
 #include <QVoice>
-#include "cwebwidget.h"
+#include <QDesktopWidget>
 #include <Qt>
 #include <QLocale>
 #include "LogHandler.h"
+#include "cwebwidget.h"
+#include "assistantwindow.h"
+#include "ui_assistantwindow.h"
 
 AssistantWindow::AssistantWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::AssistantWindow),webTalk(new CWebWidget(this)),webBook(new CWebWidget(this)),webNews(new CWebWidget(this))
 {
     ui->setupUi(this);
+
+    QRect desktop = QApplication::desktop()->geometry();
+    desktop.moveTo(QPoint(0, 0));
+    setGeometry(desktop);
 
     webTalk->resize(600,600);
     webNews->resize(600,600);
@@ -57,7 +62,7 @@ void AssistantWindow::initLayout()
     QWidget *win = new QWidget(this);
 
     QHBoxLayout *hbox = new QHBoxLayout(win);
-    QVBoxLayout *vbox = new QVBoxLayout(win);
+    QVBoxLayout *vbox = new QVBoxLayout();
 
 
     QSizePolicy spRight(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -82,15 +87,6 @@ void AssistantWindow::initLayout()
     win->setStyleSheet("QWidget { background-image:url(\"/opt/html/bg.jpg\"); background-position: center;}");
     setCentralWidget(win);
 
-   // webTalk->page()->runJavaScript("test()");
-   // webTalk->page()->runJavaScript("test2()");
-   // webTalk->page()->runJavaScript("test()");
-
-    QVoice voice;
-    voice.ageName(QVoice::Adult);
-
-
-
-
+    // webTalk->page()->runJavaScript("test()");
 
 }

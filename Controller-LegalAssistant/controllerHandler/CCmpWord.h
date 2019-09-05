@@ -13,19 +13,19 @@ class CCmpWord: public CCmpServer
 {
 	typedef struct _WORD_REQUEST
 	{
-		int nId;
-		int nType;
-		int nTotal;
-		int nNumber;
+        int nId;
+        int nType;
+        int nTotal;
+        int nNumber;
 		std::string strWord;
 		std::string strDeviceId;
-		_WORD_REQUEST()
-		{
-			nId = -1;
-			nType = -1;
-			nTotal = 0;
-			nNumber = 0;
-		}
+        _WORD_REQUEST()
+        {
+            nId = -1;
+            nType = -1;
+            nTotal = 0;
+            nNumber = 0;
+        }
 	} WORD_REQUEST;
 public:
 	explicit CCmpWord(CObject *object);

@@ -11,7 +11,6 @@
 #include "utility.h"
 #include "common.h"
 #include "JSONObject.h"
-#include "CSemanticJudge.h"
 #include "config.h"
 
 using namespace std;
@@ -37,18 +36,18 @@ int CCmpWord::onSemanticWord(int nSocket, int nCommand, int nSequence, const voi
 		JSONObject *jobjRoot = new JSONObject(strBody);
 		if(jobjRoot->isValid())
 		{
-			wordRequest.nId = jobjRoot->getInt("id");
-			wordRequest.nType = jobjRoot->getInt("type");
-			wordRequest.nTotal = jobjRoot->getInt("total");
-			wordRequest.nNumber = jobjRoot->getInt("number");
-			wordRequest.strWord = jobjRoot->getString("word");
+            wordRequest.nId = jobjRoot->getInt("id");
+            wordRequest.nType = jobjRoot->getInt("type");
+            wordRequest.nTotal = jobjRoot->getInt("total");
+            wordRequest.nNumber = jobjRoot->getInt("number");
+            wordRequest.strWord = jobjRoot->getString("word");
 			wordRequest.strDeviceId = jobjRoot->getString("device_id");
 		}
-		jobjRoot->release();
+        jobjRoot->release();
 		delete jobjRoot;
 
-		if(0 > wordRequest.nId || 0 > wordRequest.nType || TYPE_REQ_MAX <= wordRequest.nType
-				|| wordRequest.strWord.empty())
+        if(0 > wordRequest.nId || 0 > wordRequest.nType || TYPE_REQ_MAX <= wordRequest.nType
+                || wordRequest.strWord.empty())
 		{
 			response(nSocket, nCommand, STATUS_RINVJSON, nSequence, 0);
 			return FALSE;

@@ -32,16 +32,6 @@ SOURCES += \
         Controller-LegalAssistant/assistantwindow.cpp \
         Controller-LegalAssistant/controllerHandler/CResponsePacket.cpp \
         Controller-LegalAssistant/mainwindowlegalassistant.cpp \
-        Controller-LegalAssistant/semanticHandler/CAnalysisHandler.cpp \
-        Controller-LegalAssistant/semanticHandler/CSemantic.cpp \
-        Controller-LegalAssistant/semanticHandler/CSemanticJudge.cpp \
-        Controller-LegalAssistant/serviceHandler/CContentHandler.cpp \
-        Controller-LegalAssistant/serviceHandler/CDisplayHandler.cpp \
-        Controller-LegalAssistant/serviceHandler/CGamePlay.cpp \
-        Controller-LegalAssistant/serviceHandler/CParticiple.cpp \
-        Controller-LegalAssistant/serviceHandler/CPenReader.cpp \
-        Controller-LegalAssistant/serviceHandler/CSemanticService.cpp \
-        Controller-LegalAssistant/serviceHandler/CStory.cpp \
         Controller-LegalAssistant/webWidget/cwebwidget.cpp \
         Global/application/CApplication.cpp \
         Global/cmpHandler/CCmpHandler.cpp \
@@ -57,7 +47,6 @@ SOURCES += \
         Global/logHandler/LogHandler.cpp \
         Global/messageHandler/CMessageHandler.cpp \
         Global/mysqlHandler/CMysqlHandler.cpp \
-        Global/mysqlHandler/main.cpp \
         Global/objectHandler/CObject.cpp \
         Global/objectHandler/CThread.cpp \
         Global/objectHandler/CTimer.cpp \
@@ -72,14 +61,9 @@ SOURCES += \
         Global/socketHandler/CSocket.cpp \
         Global/socketHandler/CSocketClient.cpp \
         Global/socketHandler/CSocketServer.cpp \
-        Global/spotifyHandler/CSpotify.cpp \
         Global/stringHandler/CString.cpp \
         Global/stringHandler/CStringArray.cpp \
-        Global/stringHandler/main.cpp \
         Global/threadHandler/CThreadHandler.cpp \
-        Global/weatherHandler/CWeather.cpp \
-        Global/wmctrl/wmctrl.c
-
 
 HEADERS += \
         Controller-LegalAssistant/controllerHandler/CCmpWord.h \
@@ -88,17 +72,6 @@ HEADERS += \
         Controller-LegalAssistant/controllerHandler/CResponsePacket.h \
         Controller-LegalAssistant/controllerHandler/config.h \
         Controller-LegalAssistant/mainwindowlegalassistant.h \
-        Controller-LegalAssistant/semanticHandler/CAnalysisHandler.h \
-        Controller-LegalAssistant/semanticHandler/CSemantic.h \
-        Controller-LegalAssistant/semanticHandler/CSemanticJudge.h \
-        Controller-LegalAssistant/semanticHandler/dataStruct.h \
-        Controller-LegalAssistant/serviceHandler/CContentHandler.h \
-        Controller-LegalAssistant/serviceHandler/CDisplayHandler.h \
-        Controller-LegalAssistant/serviceHandler/CGamePlay.h \
-        Controller-LegalAssistant/serviceHandler/CParticiple.h \
-        Controller-LegalAssistant/serviceHandler/CPenReader.h \
-        Controller-LegalAssistant/serviceHandler/CSemanticService.h \
-        Controller-LegalAssistant/serviceHandler/CStory.h \
         Controller-LegalAssistant/webWidget/cwebwidget.h \
         Global/application/CApplication.h \
         Global/application/Message.h \
@@ -142,15 +115,12 @@ HEADERS += \
         Global/stringHandler/CString.h \
         Global/stringHandler/CStringArray.h \
         Global/threadHandler/CThreadHandler.h \
-        Global/weatherHandler/CWeather.h
 
 
 INCLUDEPATH += \
         Controller-LegalAssistant/controllerHandler \
         Controller-LegalAssistant \
         Controller-LegalAssistant/webWidget \
-        Controller-LegalAssistant/serviceHandler \
-        Controller-LegalAssistant/semanticHandler \
         Global/application \
         Global/messageHandler \
         Global/logHandler \
@@ -168,17 +138,17 @@ INCLUDEPATH += \
         Global/rankingHandler \
         Global/stringHandler \
         Global/mysqlHandler \
-        Global/spotifyHandler \
-        Global/weatherHandler \
         Global/httpHandler \
         /usr/include/glib-2.0 \
         /usr/lib/glib-2.0/include \
-        /usr/lib/x86_64-linux-gnu/glib-2.0/include
+        /usr/lib/x86_64-linux-gnu/glib-2.0/include \
+        /usr/include/mysql \
+        /usr/include/curl
 
 
 #apt-get install libxmu-dev
 
-LIBS += -lrt -lm -lglib-2.0 -lX11 -lXmu -L/usr/lib
+LIBS += -lrt -lm -lglib-2.0 -lX11 -lXmu -L/usr/lib -lcurl -lmysqlclient
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -209,5 +179,6 @@ defineTest(copyToDestDir) {
 #copyToDestDir($$PWD/Controller-LegalAssistant/QController-LegalAssistant.conf, $$PWD/Controller-LegalAssistant/bin)
 
 DISTFILES += \
+    Controller-LegalAssistant/QController-LegalAssistant.conf \
     html/hop.ogg \
     html/index.htm
