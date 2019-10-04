@@ -25,6 +25,10 @@ private:
     CWebWidget *webTalk;
     CWebWidget *webBook;
     CWebWidget *webNews;
+    QTimer *timer;
+
+public slots:
+    void MySlot();
 };
 
 #endif // ASSISTANTWINDOW_H

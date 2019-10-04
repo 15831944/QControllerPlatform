@@ -10,6 +10,7 @@
 #include <QDesktopWidget>
 #include <Qt>
 #include <QLocale>
+#include <QtCore>
 #include "LogHandler.h"
 #include "cwebwidget.h"
 #include "assistantwindow.h"
@@ -28,13 +29,17 @@ AssistantWindow::AssistantWindow(QWidget *parent) :
     webTalk->resize(600,600);
     webNews->resize(600,600);
     webTalk->load(QUrl::fromLocalFile("/opt/html/index.htm"));
-    webBook->load(QUrl::fromLocalFile("/opt/html/law_book/book.html"));
+    //webBook->load(QUrl::fromLocalFile("/opt/html/left.htm"));
+    //webBook->load(QUrl("https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=G0400121&flno=63"));
     webNews->load(QUrl::fromLocalFile("/opt/html/news.htm"));
 
     initWeb(webTalk);
     initWeb(webNews);
     initWeb(webBook);
     initLayout();
+    timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()) ,this, SLOT(MySlot()));
+    timer->start(10000);
 }
 
 AssistantWindow::~AssistantWindow()
@@ -89,4 +94,14 @@ void AssistantWindow::initLayout()
 
     // webTalk->page()->runJavaScript("test()");
 
+}
+
+void AssistantWindow::MySlot(){
+
+    QString strData = "<HTML><HEADER><BODY><H1>第 63 條 證券投資信託事業及證券投資顧問事業，應經主管機關許可，並核發營業 執照後，始得營業。 證券投資信託事業及證券投資顧問事業設立分支機構，應經主管機關許可            。</BODY><HTML>";
+    timer->stop();
+    //webBook->load(QUrl("https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=G0400121&flno=63"));
+    webBook->setHtml(strData);
+    webTalk->page()->runJavaScript("play()");
+    qDebug () << "Timer executed";
 }

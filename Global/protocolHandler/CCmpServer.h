@@ -166,7 +166,7 @@ protected:
 	// 去識別Service
 	virtual int onDeidentify(int nSocket, int nCommand, int nSequence, const void *szBody)
 	{
-		printf("[CCmpServer] onDeidentify Command: %d Body: %s\n", nCommand, reinterpret_cast<const char*>(szBody));
+        _log("[CCmpServer] onDeidentify Command: %d Body: %s\n", nCommand, reinterpret_cast<const char*>(szBody));
 		response(nSocket, nCommand, 0, nSequence, "Deidentify Response");
 		return 0;
 	}

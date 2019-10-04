@@ -5,6 +5,8 @@
  *      Author: Jugo
  */
 
+#pragma execution_character_set("utf-8")
+
 #include <sys/stat.h>
 #include <syslog.h>
 #include <fstream>
@@ -17,9 +19,9 @@
 
 using namespace std;
 
-fstream fs;
-string mstrLogPath;
-string mstrLogDate;
+static fstream fs;
+static string mstrLogPath;
+static string mstrLogDate;
 
 extern char *__progname;
 
@@ -63,6 +65,17 @@ inline void writeLog(int nSize, const char *pLog)
 	}
 }
 
+QString str2qstr(const string str)
+{
+    return QString::fromLocal8Bit(str.data());
+}
+
+string qstr2str(const QString qstr)
+{
+    QByteArray cdata = qstr.toLocal8Bit();
+    return string(cdata);
+}
+
 void _log(const char* format, ...)
 {
 	va_list vl;
@@ -83,7 +96,8 @@ void _log(const char* format, ...)
 	writeLog(strLog.length(), strLog.c_str());
 
     //printf("%s", strLog.c_str());
-    qDebug() << strLog.c_str() << endl;
+   qDebug() << strLog.c_str() << endl;
+   // qDebug() << QString::fromLocal8Bit(strLog.c_str()) << endl;
 }
 
 void _setLogPath(const char *ppath)
