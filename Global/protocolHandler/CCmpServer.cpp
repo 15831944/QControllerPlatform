@@ -40,6 +40,7 @@ CCmpServer::CCmpServer() :
 	mapFunc[wheelpies_request] = &CCmpServer::onWheelpies;
 	mapFunc[tts_request] = &CCmpServer::onTTS;
 	mapFunc[deidentify_request] = &CCmpServer::onDeidentify;
+    mapFunc[assistant_request] = &CCmpServer::onAssistant;
 
 	confCmpServer = new CONF_CMP_SERVER;
 	confCmpServer->init();

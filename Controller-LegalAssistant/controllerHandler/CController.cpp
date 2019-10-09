@@ -21,10 +21,11 @@
 #include "CString.h"
 #include "JSONObject.h"
 #include "config.h"
+#include "CAssistant.h"
 
 using namespace std;
 
-CController::CController():cmpword(0),mysql(0)
+CController::CController():cmpword(0),mysql(0),chatbot(0)
 {
 
 }
@@ -42,6 +43,7 @@ int CController::onCreated(void* nMsqKey)
     assisant = new AssistantWindow();
     cmpword = new CCmpWord(this);
     mysql = new CMysqlHandler();
+    chatbot = new CAssistant();
     return mnMsqKey;
 }
 
@@ -71,11 +73,12 @@ int CController::onInitial(void* szConfPath)
             convertFromString(nPort, strConfig);
             nResult = cmpword->start(0, static_cast<short>(nPort), mnMsqKey);
         }
-        mysql->connect(config->getValue("MYSQL","ip"), config->getValue("MYSQL","db"), "legal", "legal", "5");
+        if(mysql->connect(config->getValue("MYSQL","ip"), config->getValue("MYSQL","db"), "legal", "legal", "5"))
+        {
+            chatbot->init();
+        }
     }
     delete config;
-
-    //semanticJudge->loadAnalysis();
 
     return nResult;
 }
@@ -87,6 +90,7 @@ int CController::onFinish(void* nMsqKey)
         assisant->close();
     delete mainWindow;
     delete assisant;
+    delete chatbot;
     return nKey;
 }
 
@@ -94,11 +98,10 @@ void CController::onHandleMessage(Message &message)
 {
     switch (message.what)
     {
-    case semantic_word_request:
+    case assistant_request:
         // Lambda Expression
         thread([=]
-        {	onSemanticWordRequest( message.arg[0], message.arg[1], message.arg[2], message.arg[3],
-                    message.strData.c_str());}).detach();
+        {	onAssistantRequest( message.arg[0], message.arg[1],   message.strData.c_str());}).detach();
         break;
     }
 }
@@ -110,45 +113,10 @@ void CController::showMainWindow()
     assisant->showMaximized();
 }
 
-void CController::onSemanticWordRequest(const int nSocketFD, const int nSequence, const int nId, const int nType,
-                                        const char *szWord)
+void CController::onAssistantRequest(const int nSocketFD, const int nSequence, const char *szWord)
 {
-    CString strWord;
-    CString strDevice_id;
-    JSONObject jsonReq;
     JSONObject jsonResp;
-    jsonResp.create();
-
-    jsonReq.load(szWord);
-    strWord = jsonReq.getString("word");
-    strDevice_id = jsonReq.getString("device_id");
-    jsonReq.release();
-
-    _log("[CController] onSemanticWordRequest device_id: %s word: %s", strDevice_id.getBuffer(), strWord.getBuffer());
-
-    switch (nType)
-    {
-    case TYPE_REQ_NODEFINE: // 語意判斷
-        //  semanticJudge->runAnalysis(strWord.getBuffer(), jsonResp);
-        break;
-    case TYPE_REQ_CONTROL:	// 控制
-        break;
-    case TYPE_REQ_TALK: 	// 會話
-        break;
-    case TYPE_REQ_RECORD:	// 紀錄
-        break;
-    case TYPE_REQ_STORY:	// 故事
-        break;
-    case TYPE_REQ_GAME:		// 遊戲
-        break;
-    case TYPE_REQ_PEN:		// 點讀筆
-        break;
-    default:
-        cmpword->response(nSocketFD, semantic_word_request, STATUS_RINVJSON, nSequence, 0);
-        jsonResp.release();
-        return;
-    }
-
-    cmpword->response(nSocketFD, semantic_word_request, STATUS_ROK, nSequence, jsonResp.put("id", nId).toJSON().c_str());
-    jsonResp.release();
+    string strResp;
+    chatbot->runAnalysis(szWord,strResp);
+    cmpword->response(nSocketFD, assistant_request, STATUS_ROK, nSequence, strResp.c_str());
 }

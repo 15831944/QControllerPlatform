@@ -32,7 +32,7 @@ public:
 	virtual ~CCmpWord();
 
 protected:
-	int onSemanticWord(int nSocket, int nCommand, int nSequence, const void *szBody);
+    int onAssistant(int nSocket, int nCommand, int nSequence, const void *szBody);
 	int onUpdate(int nSocket, int nCommand, int nSequence, const void *szBody);
 
 private:

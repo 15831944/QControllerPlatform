@@ -14,6 +14,7 @@ class MainWindowLegalAssistant;
 class AssistantWindow;
 class CCmpWord;
 class CMysqlHandler;
+class CAssistant;
 
 class CController: public CApplication
 {
@@ -21,8 +22,7 @@ public:
 	CController();
 	virtual ~CController();
     void showMainWindow();
-    void onSemanticWordRequest(const int nSocketFD, const int nSequence, const int nId, const int nType,
-                const char *szWord);
+    void onAssistantRequest(const int nSocketFD, const int nSequence, const char *szWord);
 
 protected:
 	int onCreated(void* nMsqKey);
@@ -36,5 +36,6 @@ private:
     AssistantWindow *assisant;
     CCmpWord *cmpword;
     CMysqlHandler *mysql;
+    CAssistant *chatbot;
 
 };

@@ -171,6 +171,11 @@ protected:
 		return 0;
 	}
 	;
+    // 智能助理
+    virtual int onAssistant(int nSocket, int nCommand, int nSequence, const void *szBody)
+    {
+        return 0;
+    }
 protected:
 	virtual std::string taskName();
 private:

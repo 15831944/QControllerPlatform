@@ -27,6 +27,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    Controller-LegalAssistant/controllerHandler/CAssistant.cpp \
         Controller-LegalAssistant/controllerHandler/CCmpWord.cpp \
         Controller-LegalAssistant/controllerHandler/CController.cpp \
         Controller-LegalAssistant/assistantwindow.cpp \
@@ -66,6 +67,7 @@ SOURCES += \
         Global/threadHandler/CThreadHandler.cpp \
 
 HEADERS += \
+    Controller-LegalAssistant/controllerHandler/CAssistant.h \
         Controller-LegalAssistant/controllerHandler/CCmpWord.h \
         Controller-LegalAssistant/controllerHandler/CController.h \
         Controller-LegalAssistant/assistantwindow.h \

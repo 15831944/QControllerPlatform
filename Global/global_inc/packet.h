@@ -130,6 +130,12 @@ struct CMP_PACKET
 #define tts_response									0x80000058
 #define deidentify_request								0x00000059
 #define deidentify_response								0x80000059
+#define status_request									0x00000060
+#define status_response									0x80000060
+#define option_request									0x00000061
+#define option_response									0x80000061
+#define assistant_request                               0x00000062
+#define assistant_response                              0x80000062
 #define controller_die_request							0x000000FE
 #define controller_die_response							0x800000FE
 
@@ -201,7 +207,7 @@ smart_building_appversion_response, "smart_building_appversion_response")(smart_
 		"smart_building_wireless_power_charge_response")(semantic_word_request, "semantic_word_request")(
 semantic_word_response, "semantic_word_response")(tts_request, "tts_request")(tts_response, "tts_response")(
 		controller_die_request, "controller_die_request")(
-controller_die_response, "controller_die_response")(deidentify_request,"deidentify_request")(deidentify_response,"deidentify_response");
+controller_die_response, "controller_die_response")(deidentify_request,"deidentify_request")(deidentify_response,"deidentify_response")(assistant_request,"assistant_request")(assistant_response,"assistant_response");
 
 static map<int, string> mapStatus = create_map<int, string>\
 ( STATUS_ROK, "No Error")( STATUS_RINVMSGLEN,
