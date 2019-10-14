@@ -28,10 +28,12 @@ CONFIG += c++11
 
 SOURCES += \
     Controller-LegalAssistant/controllerHandler/CAssistant.cpp \
+    Controller-LegalAssistant/controllerHandler/CChatbot.cpp \
         Controller-LegalAssistant/controllerHandler/CCmpWord.cpp \
         Controller-LegalAssistant/controllerHandler/CController.cpp \
         Controller-LegalAssistant/assistantwindow.cpp \
         Controller-LegalAssistant/controllerHandler/CResponsePacket.cpp \
+    Controller-LegalAssistant/controllerHandler/CStartup.cpp \
         Controller-LegalAssistant/mainwindowlegalassistant.cpp \
         Controller-LegalAssistant/webWidget/cwebwidget.cpp \
         Global/application/CApplication.cpp \
@@ -68,10 +70,12 @@ SOURCES += \
 
 HEADERS += \
     Controller-LegalAssistant/controllerHandler/CAssistant.h \
+    Controller-LegalAssistant/controllerHandler/CChatbot.h \
         Controller-LegalAssistant/controllerHandler/CCmpWord.h \
         Controller-LegalAssistant/controllerHandler/CController.h \
         Controller-LegalAssistant/assistantwindow.h \
         Controller-LegalAssistant/controllerHandler/CResponsePacket.h \
+    Controller-LegalAssistant/controllerHandler/CStartup.h \
         Controller-LegalAssistant/controllerHandler/config.h \
         Controller-LegalAssistant/mainwindowlegalassistant.h \
         Controller-LegalAssistant/webWidget/cwebwidget.h \

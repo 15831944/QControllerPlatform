@@ -26,7 +26,7 @@ AssistantWindow::AssistantWindow(QWidget *parent) :
     desktop.moveTo(QPoint(0, 0));
     setGeometry(desktop);
 
-    webTalk->resize(600,600);
+    webTalk->resize(600,350);
     webNews->resize(600,600);
     webTalk->load(QUrl::fromLocalFile("/opt/html/index.htm"));
     //webBook->load(QUrl::fromLocalFile("/opt/html/left.htm"));
@@ -91,9 +91,6 @@ void AssistantWindow::initLayout()
 
     win->setStyleSheet("QWidget { background-image:url(\"/opt/html/bg.jpg\"); background-position: center;}");
     setCentralWidget(win);
-
-    // webTalk->page()->runJavaScript("test()");
-
 }
 
 void AssistantWindow::MySlot(){

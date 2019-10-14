@@ -116,7 +116,7 @@ void CController::showMainWindow()
 void CController::onAssistantRequest(const int nSocketFD, const int nSequence, const char *szWord)
 {
     JSONObject jsonResp;
-    string strResp;
+    string strResp = GLOBAL_WORD_UNKNOW;
     chatbot->runAnalysis(szWord,strResp);
     cmpword->response(nSocketFD, assistant_request, STATUS_ROK, nSequence, strResp.c_str());
 }

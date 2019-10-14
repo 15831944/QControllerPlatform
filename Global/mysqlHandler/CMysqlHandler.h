@@ -18,6 +18,7 @@ class CMysqlHandler
 public:
 	CMysqlHandler();
 	virtual ~CMysqlHandler();
+    static CMysqlHandler* getInstance();
 	int connect(std::string strHost, std::string strDB, std::string strUser, std::string strPassword,
 			const char *szConnTimeout = "5");
 	void close();
@@ -27,6 +28,7 @@ public:
 	int getLastErrorNo();
 	int getFields(std::string strTableName, std::set<std::string> &sFields);
 	bool isValid();
+    const char* getStatus();
 
 private:
 	void setError(std::string strMsg);

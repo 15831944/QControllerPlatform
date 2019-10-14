@@ -12,6 +12,11 @@ CAssistant::CAssistant()
 
 }
 
+CAssistant::~CAssistant()
+{
+
+}
+
 inline void showInit(list<std::map<std::string, std::string> > &listRecord, const char* szTable)
 {
     map<string, string> mapItem;
@@ -120,10 +125,10 @@ void CAssistant::intent(int nIntent, const char* szTable, const char* szWord,std
         switch (nIntent)
         {
         case 1: // How many startup in fintech space
-            strResp = "新創公司類別尚未建立";
+            strResp = "園區類別尚未建立";
             break;
-        case 2: // Some type of startup
-            strResp = "新創公司資訊尚未建立";
+        case 2: // Information of fintech
+            strResp = "金融資訊尚未建立";
             break;
         case 3: // startup 新創
             strResp = startup(szTable,szWord,mysql);
@@ -142,5 +147,5 @@ void CAssistant::intent(int nIntent, const char* szTable, const char* szWord,std
 
 string CAssistant::startup(const char* szTable, const char* szWord, CMysqlHandler*& mysql)
 {
-
+    return "startup";
 }

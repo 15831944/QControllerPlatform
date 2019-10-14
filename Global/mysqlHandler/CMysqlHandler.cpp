@@ -11,6 +11,8 @@
 
 using namespace std;
 
+static CMysqlHandler* m_instance = 0;
+
 CMysqlHandler::CMysqlHandler() :
 		mnLastErrorNo(0)
 {
@@ -20,6 +22,25 @@ CMysqlHandler::CMysqlHandler() :
 CMysqlHandler::~CMysqlHandler()
 {
 	close();
+    delete m_instance;
+}
+
+CMysqlHandler* CMysqlHandler::getInstance()
+{
+    if(0 == m_instance)
+    {
+        m_instance = new CMysqlHandler();
+    }
+    return m_instance;
+}
+
+const char* CMysqlHandler::getStatus()
+{
+    if(mpMySQL)
+    {
+        return mysql_stat(mpMySQL);
+    }
+    return 0;
 }
 
 bool CMysqlHandler::isValid()
