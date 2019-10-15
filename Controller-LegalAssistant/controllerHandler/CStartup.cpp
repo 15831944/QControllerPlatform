@@ -2,7 +2,7 @@
 
 CStartup::CStartup():CChatbot()
 {
-
+    init();
 }
 
 CStartup::~CStartup()
@@ -10,7 +10,7 @@ CStartup::~CStartup()
 
 }
 
-void CStartup::runAnalysis(const char *szInput, std::string &strResp)
+void CStartup::init()
 {
-
+    initData("startup");
 }

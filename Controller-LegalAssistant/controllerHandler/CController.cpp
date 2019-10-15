@@ -73,10 +73,10 @@ int CController::onInitial(void* szConfPath)
             convertFromString(nPort, strConfig);
             nResult = cmpword->start(0, static_cast<short>(nPort), mnMsqKey);
         }
-        if(mysql->connect(config->getValue("MYSQL","ip"), config->getValue("MYSQL","db"), "legal", "legal", "5"))
-        {
-            chatbot->init();
-        }
+      //  if(mysql->connect(config->getValue("MYSQL","ip"), config->getValue("MYSQL","db"), "legal", "legal", "5"))
+      //  {
+      //      chatbot->init();
+      //  }
     }
     delete config;
 

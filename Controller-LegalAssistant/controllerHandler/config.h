@@ -41,3 +41,6 @@
 #define DB_DATABASE                 "legal"
 #define DB_USER                     "legal"
 #define DB_PASSWORD                 "legal"
+#define DB_CONN_TIMEOUT             "5"
+#define SQL_QUERY_INTENT            "SELECT intent,keyword,table_name FROM "
+#define SQL_QUERY_INTENT_ORDER      " ORDER BY intent"

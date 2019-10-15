@@ -2,12 +2,13 @@
 
 #include "CChatbot.h"
 
-class CStartup : CChatbot
+class CStartup : public CChatbot
 {
 public:
     explicit CStartup();
     virtual ~CStartup();
+    void init();
 
 protected:
-    void runAnalysis(const char *szInput, std::string &strResp);
+
 };
