@@ -29,6 +29,8 @@ public:
     void init();
 
 private:
+    int intentTree(INTENT &intentInfo);
+    void getReply(INTENT &intentInfo);
     void onStartup(INTENT &intentInfo);
 
 private:

@@ -44,3 +44,4 @@
 #define DB_CONN_TIMEOUT             "5"
 #define SQL_QUERY_INTENT            "SELECT intent,keyword,table_name FROM "
 #define SQL_QUERY_INTENT_ORDER      " ORDER BY intent"
+#define SQL_QUERY_REPLIES           "SELECT reply FROM replies WHERE intent_id = "
