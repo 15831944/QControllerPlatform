@@ -55,8 +55,9 @@ inline void writeLog(int nSize, const char *pLog)
 		_close();
 		fs.open(strPath.c_str(), fstream::in | fstream::out | fstream::app);
 		fs.rdbuf()->pubsetbuf(0, 0);
+        fs << "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>\r\n" << endl;
 		fs << currentDateTime() + " : [LogHandler] Open File: " + strPath << endl;
-		printf("[LogHandler] Open File: %s\n", strPath.c_str());
+        printf("[LogHandler] Open File: %s\r\n", strPath.c_str());
 	}
 
 	if(fs.is_open())
@@ -91,13 +92,12 @@ void _log(const char* format, ...)
 
     string strLog = string(buffer, (ULONG)size);
 
-	strLog = currentDateTime() + " : " + strLog + "\n";
+    strLog = "</br>" + currentDateTime() + " : " + strLog + "\r\n";
 
 	writeLog(strLog.length(), strLog.c_str());
 
-    //printf("%s", strLog.c_str());
-   qDebug() << strLog.c_str() << endl;
-   // qDebug() << QString::fromLocal8Bit(strLog.c_str()) << endl;
+    qDebug() << strLog.c_str() << endl;
+
 }
 
 void _setLogPath(const char *ppath)

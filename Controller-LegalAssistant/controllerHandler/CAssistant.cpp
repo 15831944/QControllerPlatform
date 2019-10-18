@@ -13,29 +13,19 @@
 
 using namespace std;
 
-CAssistant::CAssistant():fuzzyWord(0),intent(0),startup(0),boss(0)
+CAssistant::CAssistant():fuzzyWord(0)
 {
     fuzzyWord = new CFuzzyWord();
-    intent = new CIntent();
-    startup = new CStartup();
-    boss = new CBoss();
-
-    mapFunc[STARTUP] = &CAssistant::onStartup;
 }
 
 CAssistant::~CAssistant()
 {
     delete fuzzyWord;
-    delete intent;
-    delete startup;
-    delete boss;
 }
 
 void CAssistant::init()
 {
     fuzzyWord->init();
-    intent->init();
-    startup->init();
 }
 
 void CAssistant::runAnalysis(const char *szInput, std::string &strResp)
@@ -47,7 +37,7 @@ void CAssistant::runAnalysis(const char *szInput, std::string &strResp)
 
     CMysqlHandler *mysql;
     map<string, string> mapItem;
-    map<int, MemFn>::iterator iter;
+
     INTENT intentInfo;
 
     intentInfo.init();
@@ -68,20 +58,6 @@ void CAssistant::runAnalysis(const char *szInput, std::string &strResp)
     getReply(intentInfo);
     strResp = intentInfo.strResp;
 
-/*
-    intent->runAnalysis(intentInfo);
-
-    if(mapFunc.end() == mapFunc.find(intentInfo.nIntent_id))
-    {
-        strResp = "語意的意圖未建立相關的知識庫";
-        return;
-    }
-
-    (this->*this->mapFunc[intentInfo.nIntent_id])(intentInfo);
-
-    strResp = intentInfo.strResp;
-    return;
-*/
 }
 
 inline int findAllOccurances(string data, string toSearch)
@@ -101,7 +77,7 @@ inline int findAllOccurances(string data, string toSearch)
     return nCount;
 }
 
-int CAssistant::intentTree(INTENT &intentInfo)
+void CAssistant::intentTree(INTENT &intentInfo)
 {
     CMysqlHandler *mysql;
     ostringstream outStream;
@@ -118,6 +94,7 @@ int CAssistant::intentTree(INTENT &intentInfo)
         nCount = 0;
         while(1000 > intentInfo.nIntent_id)
         {
+INTENT_HERE:
             outStream.str("");
             outStream.clear();
             outStream << SQL_QUERY_INTENT << intentInfo.strTable << SQL_QUERY_INTENT_ORDER;
@@ -138,6 +115,7 @@ int CAssistant::intentTree(INTENT &intentInfo)
                              intentInfo.listKeyWord.push_back(j->second);
                              intentInfo.strTable = (*i)["table_name"];
                              _log("[CAssistant] intentTree word march intent: %d keyword: %s table: %s\n", intentInfo.nIntent_id,j->second.c_str(),intentInfo.strTable.c_str());
+                             goto INTENT_HERE;
                          }
                      }
                 }
@@ -181,17 +159,3 @@ void CAssistant::getReply(INTENT &intentInfo)
     }
     _log("[CAssistant] getReply reply: %s", intentInfo.strResp.c_str());
 }
-
-void CAssistant::onStartup(INTENT &intentInfo)
-{
-    intentInfo.strResp = "分析新創相關問題";
-    startup->runAnalysis(intentInfo);
-    _log("[CAssistant] onStartup runAnalysis nIntent_id: %d", intentInfo.nIntent_id);
-    switch(intentInfo.nIntent_id)
-    {
-    case 1:
-        boss->runAnalysis(intentInfo);
-        break;
-    }
-}
-
