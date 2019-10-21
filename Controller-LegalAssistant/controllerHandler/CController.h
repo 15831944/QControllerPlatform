@@ -37,5 +37,4 @@ private:
     CCmpWord *cmpword;
     CMysqlHandler *mysql;
     CAssistant *chatbot;
-
 };

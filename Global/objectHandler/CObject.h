@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include "CMessageHandler.h"
 
+
 #define _OBJ(obj)			reinterpret_cast<CObject*>(obj)
 #define _VOID(const_char)	const_cast<void*>(reinterpret_cast<const void*>(const_char))
 

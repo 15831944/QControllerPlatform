@@ -16,6 +16,7 @@ class AssistantWindow : public QMainWindow
 public:
     explicit AssistantWindow(QWidget *parent = nullptr);
     ~AssistantWindow();
+    void showText(const char* szInput);
 
 private:
     void initLayout();
@@ -27,8 +28,13 @@ private:
     CWebWidget *webNews;
     QTimer *timer;
 
+signals:
+    void singalsShowText(QString strText);
+
 public slots:
     void MySlot();
+    void slotShowText(QString strText);
+
 };
 
 #endif // ASSISTANTWINDOW_H

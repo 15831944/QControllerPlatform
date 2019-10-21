@@ -96,6 +96,8 @@ int CController::onFinish(void* nMsqKey)
 
 void CController::onHandleMessage(Message &message)
 {
+    onAssistantRequest( message.arg[0], message.arg[1],   message.strData.c_str());
+/*
     switch (message.what)
     {
     case assistant_request:
@@ -104,6 +106,7 @@ void CController::onHandleMessage(Message &message)
         {	onAssistantRequest( message.arg[0], message.arg[1],   message.strData.c_str());}).detach();
         break;
     }
+*/
 }
 
 void CController::showMainWindow()
@@ -116,7 +119,9 @@ void CController::showMainWindow()
 void CController::onAssistantRequest(const int nSocketFD, const int nSequence, const char *szWord)
 {
     JSONObject jsonResp;
-    string strResp = GLOBAL_WORD_UNKNOW;
+    string strResp = RESP_WORD_UNKNOW0;
     chatbot->runAnalysis(szWord,strResp);
+
+    assisant->showText(strResp.c_str());
     cmpword->response(nSocketFD, assistant_request, STATUS_ROK, nSequence, strResp.c_str());
 }

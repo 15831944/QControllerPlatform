@@ -265,3 +265,20 @@ __attribute__ ((unused)) static string getConfigFile()
 	size_t found = strProcessName.find_last_of("/\\");
 	return strProcessName.substr(++found) + ".conf";
 }
+
+__attribute__ ((unused)) static int findAllOccurances(string data, string toSearch)
+{
+    int nCount;
+    // Get the first occurrence
+    size_t pos = data.find(toSearch);
+
+    // Repeat till end is reached
+    nCount = 0;
+    while( pos != string::npos)
+    {
+        ++nCount;
+        // Get the next occurrence from the current position
+        pos =data.find(toSearch, pos + toSearch.size());
+    }
+    return nCount;
+}

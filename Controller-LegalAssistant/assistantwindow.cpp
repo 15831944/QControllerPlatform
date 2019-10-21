@@ -29,7 +29,7 @@ AssistantWindow::AssistantWindow(QWidget *parent) :
     webTalk->resize(600,350);
     webNews->resize(600,600);
     webTalk->load(QUrl::fromLocalFile("/opt/html/index.htm"));
-    //webBook->load(QUrl::fromLocalFile("/opt/html/left.htm"));
+    webBook->load(QUrl::fromLocalFile("/opt/html/left.htm"));
     //webBook->load(QUrl("https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=G0400121&flno=63"));
     webNews->load(QUrl::fromLocalFile("/opt/html/news.htm"));
 
@@ -39,7 +39,7 @@ AssistantWindow::AssistantWindow(QWidget *parent) :
     initLayout();
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()) ,this, SLOT(MySlot()));
-    timer->start(10000);
+    connect(this,SIGNAL(singalsShowText(QString strText)),this,SLOT(slotShowText(QString strText)));
 }
 
 AssistantWindow::~AssistantWindow()
@@ -95,10 +95,35 @@ void AssistantWindow::initLayout()
 
 void AssistantWindow::MySlot(){
 
-    QString strData = "<HTML><HEADER><BODY><H1>第 63 條 證券投資信託事業及證券投資顧問事業，應經主管機關許可，並核發營業 執照後，始得營業。 證券投資信託事業及證券投資顧問事業設立分支機構，應經主管機關許可            。</BODY><HTML>";
-    timer->stop();
-    //webBook->load(QUrl("https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=G0400121&flno=63"));
-    webBook->setHtml(strData);
-    webTalk->page()->runJavaScript("play()");
+    webTalk->page()->runJavaScript("stop()");
     qDebug () << "Timer executed";
+}
+
+void AssistantWindow::showText(const char* szInput)
+{
+    webTalk->page()->runJavaScript("play()");
+    QString strData;
+    strData.sprintf("<HTML><HEADER></HEADER><BODY><H1>%s</BODY><HTML>",  szInput);
+    emit singalsShowText(strData);
+    webBook->page()->runJavaScript("play()");
+    _log("[AssistantWindow] showText : emit singalsShowText");
+
+
+
+    try {
+        webBook->setHtml(strData);
+
+    } catch (QException e) {
+_log("exception: %s",e.what());
+    }
+
+   // webBook->load(QUrl::fromLocalFile("/opt/html/left.htm"));
+   // connect(timer,SIGNAL(timeout()) ,this, SLOT(MySlot()));
+   // timer->start(5000);
+
+}
+
+void AssistantWindow::slotShowText(QString strText)
+{
+    _log("[AssistantWindow] slotShowText : %s", strText.toStdString().c_str());
 }
