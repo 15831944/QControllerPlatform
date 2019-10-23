@@ -23,9 +23,10 @@
 #include "config.h"
 #include "CAssistant.h"
 
+
 using namespace std;
 
-CController::CController():cmpword(0),mysql(0),chatbot(0)
+CController::CController():assisantWindow(0),cmpword(0),mysql(0),chatbot(0)
 {
 
 }
@@ -40,7 +41,7 @@ int CController::onCreated(void* nMsqKey)
     // reinterpret_cast 將一種型態的指標轉換為另一種型態的指標
     mnMsqKey = *(reinterpret_cast<int*>(nMsqKey));
     mainWindow = new MainWindowLegalAssistant();
-    assisant = new AssistantWindow();
+    assisantWindow = new AssistantWindow();
     cmpword = new CCmpWord(this);
     mysql = new CMysqlHandler();
     chatbot = new CAssistant();
@@ -73,10 +74,6 @@ int CController::onInitial(void* szConfPath)
             convertFromString(nPort, strConfig);
             nResult = cmpword->start(0, static_cast<short>(nPort), mnMsqKey);
         }
-      //  if(mysql->connect(config->getValue("MYSQL","ip"), config->getValue("MYSQL","db"), "legal", "legal", "5"))
-      //  {
-      //      chatbot->init();
-      //  }
     }
     delete config;
 
@@ -86,34 +83,26 @@ int CController::onInitial(void* szConfPath)
 int CController::onFinish(void* nMsqKey)
 {
     int nKey = *(reinterpret_cast<int*>(nMsqKey));
-    if(assisant)
-        assisant->close();
+    if(assisantWindow)
+        assisantWindow->close();
     delete mainWindow;
-    delete assisant;
+    delete assisantWindow;
     delete chatbot;
     return nKey;
 }
 
 void CController::onHandleMessage(Message &message)
 {
-    onAssistantRequest( message.arg[0], message.arg[1],   message.strData.c_str());
-/*
-    switch (message.what)
+    if(assistant_request == message.what)
     {
-    case assistant_request:
-        // Lambda Expression
         thread([=]
         {	onAssistantRequest( message.arg[0], message.arg[1],   message.strData.c_str());}).detach();
-        break;
     }
-*/
 }
 
 void CController::showMainWindow()
 {
-    _log("[CController] showMainWindow");
-    //mainWindow->show();
-    assisant->showMaximized();
+    assisantWindow->showMaximized();
 }
 
 void CController::onAssistantRequest(const int nSocketFD, const int nSequence, const char *szWord)
@@ -121,7 +110,5 @@ void CController::onAssistantRequest(const int nSocketFD, const int nSequence, c
     JSONObject jsonResp;
     string strResp = RESP_WORD_UNKNOW0;
     chatbot->runAnalysis(szWord,strResp);
-
-    assisant->showText(strResp.c_str());
     cmpword->response(nSocketFD, assistant_request, STATUS_ROK, nSequence, strResp.c_str());
 }

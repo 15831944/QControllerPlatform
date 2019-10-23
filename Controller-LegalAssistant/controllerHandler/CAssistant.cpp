@@ -65,6 +65,7 @@ void CAssistant::runAnalysis(const char *szInput, std::string &strResp)
         //================ Response Word =================//
         getReply(intentInfo,mysql);
         strResp = intentInfo.strResp;
+        history(intentInfo,mysql);
         mysql->close();
     }
     else
@@ -140,6 +141,7 @@ void CAssistant::getReply(INTENT &intentInfo, CMysqlHandler *mysql)
             outStream.clear();
             outStream << (*i)["reply"] << getEnd();
             intentInfo.strResp = outStream.str();
+            intentInfo.strImage = (*i)["image"];
             break;
         }
     }
@@ -188,7 +190,14 @@ void CAssistant::keepUnknow(std::string &strInput)
     delete mysql;
 }
 
+void CAssistant::history(INTENT &intentInfo, CMysqlHandler *mysql)
+{
+    ostringstream outStream;
 
+    outStream << SQL_INSERT_HISTORY_START << intentInfo.strInput << "','" << intentInfo.strResp << "','" << intentInfo.strImage  << SQL_INSERT_HISTORY_END;
+    mysql->sqlExec(outStream.str());
+    _log("[CAssistant] history SQL:%s",outStream.str().c_str());
+}
 
 
 

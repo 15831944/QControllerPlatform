@@ -23,6 +23,7 @@ public:
 private:
     void intentTree(INTENT &intentInfo, CMysqlHandler *mysql);
     void getReply(INTENT &intentInfo, CMysqlHandler *mysql);
+    void history(INTENT &intentInfo, CMysqlHandler *mysql);
     void getUnknow(std::string &strResp);
     std::string getEnd();
     void keepUnknow(std::string &strInput);

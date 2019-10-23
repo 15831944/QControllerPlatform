@@ -15,35 +15,66 @@
 #include "cwebwidget.h"
 #include "assistantwindow.h"
 #include "ui_assistantwindow.h"
+#include "CMysqlHandler.h"
+#include "config.h"
+#include <string>
+
+using namespace std;
+
+#define WEB_FINTECH "https://www.fintechspace.com.tw"
 
 AssistantWindow::AssistantWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::AssistantWindow),webTalk(new CWebWidget(this)),webBook(new CWebWidget(this)),webNews(new CWebWidget(this))
+    ui(new Ui::AssistantWindow),webTalk(new CWebWidget(this)),webBook(new CWebWidget(this)),webNews(new CWebWidget(this)),mysql(new CMysqlHandler),timerQueryShow(0),timerStopTalk(0)
 {
+    QString strPath;
+
     ui->setupUi(this);
 
     QRect desktop = QApplication::desktop()->geometry();
     desktop.moveTo(QPoint(0, 0));
     setGeometry(desktop);
 
+    QUrl url;
     webTalk->resize(600,350);
     webNews->resize(600,600);
+
+    strPath.sprintf("%s/html/index.htm",QDir::currentPath().toStdString().c_str());
     webTalk->load(QUrl::fromLocalFile("/opt/html/index.htm"));
-    webBook->load(QUrl::fromLocalFile("/opt/html/left.htm"));
-    //webBook->load(QUrl("https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=G0400121&flno=63"));
+
+    strPath.sprintf("%s/html/news.htm",QDir::currentPath().toStdString().c_str());
     webNews->load(QUrl::fromLocalFile("/opt/html/news.htm"));
+
+    strPath.sprintf("%s/html/amplify/index.html",QDir::currentPath().toStdString().c_str());
+    webBook->load(QUrl::fromLocalFile(strPath));
 
     initWeb(webTalk);
     initWeb(webNews);
     initWeb(webBook);
     initLayout();
-    timer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()) ,this, SLOT(MySlot()));
-    connect(this,SIGNAL(singalsShowText(QString strText)),this,SLOT(slotShowText(QString strText)));
+
+    timerQueryShow = new QTimer(this);
+    timerStopTalk = new QTimer(this);
+
+    connect(timerQueryShow,SIGNAL(timeout()) ,this, SLOT(slotQueryShow()));
+    connect(timerStopTalk,SIGNAL(timeout()), this, SLOT(slotStopTalk()));
+
+    timerQueryShow->start(1000);
+
+    mysql->connect(DB_IP, DB_DATABASE, DB_USER, DB_PASSWORD, DB_CONN_TIMEOUT);
 }
 
 AssistantWindow::~AssistantWindow()
 {
+    if(mysql->isValid())
+    {
+        mysql->close();
+    }
+    timerQueryShow->stop();
+    timerStopTalk->stop();
+    delete timerQueryShow;
+    delete timerStopTalk;
+    delete mysql;
     delete webTalk;
     delete webNews;
     delete webBook;
@@ -93,37 +124,54 @@ void AssistantWindow::initLayout()
     setCentralWidget(win);
 }
 
-void AssistantWindow::MySlot(){
 
-    webTalk->page()->runJavaScript("stop()");
-    qDebug () << "Timer executed";
-}
-
-void AssistantWindow::showText(const char* szInput)
+void AssistantWindow::slotQueryShow()
 {
-    webTalk->page()->runJavaScript("play()");
+    string strSQL;
+    list<map<string, string> > listData;
+    list<map<string, string> >::iterator i;
+    map<string, string>::iterator j;
     QString strData;
-    strData.sprintf("<HTML><HEADER></HEADER><BODY><H1>%s</BODY><HTML>",  szInput);
-    emit singalsShowText(strData);
-    webBook->page()->runJavaScript("play()");
-    _log("[AssistantWindow] showText : emit singalsShowText");
+    int nTalkSec;
 
 
-
-    try {
-        webBook->setHtml(strData);
-
-    } catch (QException e) {
-_log("exception: %s",e.what());
+    if(!mysql->isValid())
+    {
+        _log("[AssistantWindow] slotQueryShow Mysql Invalid!!");
+       return;
     }
 
-   // webBook->load(QUrl::fromLocalFile("/opt/html/left.htm"));
-   // connect(timer,SIGNAL(timeout()) ,this, SLOT(MySlot()));
-   // timer->start(5000);
+    strSQL = "SELECT id,input,reply,image FROM history WHERE state = 0 LIMIT 1";
+    mysql->query(strSQL.c_str(), listData);
+    if(0 < listData.size())
+    {
+        i = listData.begin();
+        strData.sprintf("UPDATE history SET state = 1 WHERE id = %s", (*i)["id"].c_str());
+        mysql->sqlExec(strData.toStdString());
+        //_log("[AssistantWindow] slotQueryShow SQL:%s",strData.toStdString().c_str());
 
+        strData.sprintf("showTitle('%s')",(*i)["input"].c_str());
+        webBook->page()->runJavaScript(strData);
+
+        strData.sprintf("showText('%s')",(*i)["reply"].c_str());
+        webBook->page()->runJavaScript(strData);
+
+        strData.sprintf("showImage('images/%s')",(*i)["image"].c_str());
+        webBook->page()->runJavaScript(strData);
+
+        webTalk->page()->runJavaScript("play()");
+        nTalkSec = (int)(*i)["reply"].length()/10;
+        if(4 > nTalkSec)
+            nTalkSec = 4;
+        if(30 < nTalkSec)
+            nTalkSec = 30;
+        timerStopTalk->start(nTalkSec * 1000);
+       // _log("[AssistantWindow] slotQueryShow start play talk and show reply on left page. talk second:%d",nTalkSec);
+    }
 }
 
-void AssistantWindow::slotShowText(QString strText)
+void AssistantWindow::slotStopTalk()
 {
-    _log("[AssistantWindow] slotShowText : %s", strText.toStdString().c_str());
+    timerStopTalk->stop();
+    webTalk->page()->runJavaScript("stop()");
 }

@@ -99,7 +99,7 @@ void CMysqlHandler::setError(string strMsg)
 //	if(NULL != mpMySQL)
 //	{
 	mstrLastError = mysql_error(mpMySQL);
-	mnLastErrorNo = mysql_errno(mpMySQL);
+    mnLastErrorNo = (int)mysql_errno(mpMySQL);
 	_log("[CMysqlHandler] setError Error:%s mysql_error:%s", strMsg.c_str(), mstrLastError.c_str());
 //	}
 }
@@ -142,7 +142,7 @@ int CMysqlHandler::query(string strSQL, list<map<string, string> > &listRest)
 	}
 
 	// mysql_query()執行成功返回0，失敗返回非0值。
-	_log("[CMysqlHandler] mysql_query: %s", strSQL.c_str());
+    //_log("[CMysqlHandler] mysql_query: %s", strSQL.c_str());
 	if(mysql_real_query(mpMySQL, strSQL.c_str(), strSQL.length()))
 	{
 		setError("Query Error");

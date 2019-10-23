@@ -11,6 +11,7 @@ typedef struct _INTENT
     std::string strTable;
     std::string strInput;
     std::string strResp;
+    std::string strImage;
     std::list<std::string> listKeyWord;
 
     void init()
@@ -21,6 +22,7 @@ typedef struct _INTENT
         strTable.empty();
         strResp.empty();
         strInput.empty();
+        strImage.empty();
         listKeyWord.clear();
     }
 }INTENT;

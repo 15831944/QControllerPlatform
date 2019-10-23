@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class CMysqlHandler;
+
 namespace Ui {
 class AssistantWindow;
 }
@@ -16,7 +18,6 @@ class AssistantWindow : public QMainWindow
 public:
     explicit AssistantWindow(QWidget *parent = nullptr);
     ~AssistantWindow();
-    void showText(const char* szInput);
 
 private:
     void initLayout();
@@ -26,14 +27,16 @@ private:
     CWebWidget *webTalk;
     CWebWidget *webBook;
     CWebWidget *webNews;
-    QTimer *timer;
+    QTimer *timerQueryShow;
+    QTimer *timerStopTalk;
+    CMysqlHandler *mysql;
 
-signals:
+public: signals:
     void singalsShowText(QString strText);
 
 public slots:
-    void MySlot();
-    void slotShowText(QString strText);
+    void slotQueryShow();
+    void slotStopTalk();
 
 };
 

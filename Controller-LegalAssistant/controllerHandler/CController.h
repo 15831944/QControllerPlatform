@@ -18,6 +18,7 @@ class CAssistant;
 
 class CController: public CApplication
 {
+
 public:
 	CController();
 	virtual ~CController();
@@ -33,8 +34,9 @@ protected:
 private:
     int mnMsqKey;
     MainWindowLegalAssistant *mainWindow;
-    AssistantWindow *assisant;
+    AssistantWindow *assisantWindow;
     CCmpWord *cmpword;
     CMysqlHandler *mysql;
     CAssistant *chatbot;
+
 };

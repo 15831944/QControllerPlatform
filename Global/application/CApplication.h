@@ -11,6 +11,7 @@
 #include <map>
 #include <string>
 
+
 class CApplication: public CObject
 {
 public:

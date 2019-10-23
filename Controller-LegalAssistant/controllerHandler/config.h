@@ -18,9 +18,9 @@
 
 //==================================== 固定回復 ===========================================//
 #define RESP_WORD_UNKNOW0					"我不了解這句話的意思"
-#define RESP_WORD_UNKNOW1                   "抱歉喔，我最近才開始正在努力學習中，還沒有辦法回答您詢問的問題"
-#define RESP_WORD_UNKNOW2                   "我還需要再多吃一點資料才能理解您說的，所以先請旁邊的工作人員協助您解惑喔"
-#define RESP_WORD_UNKNOW3                   "不要為難我嘛，我還在成長階段還沒有學到那，所以先請旁邊的工作人員協助您解惑喔"
+#define RESP_WORD_UNKNOW1                   "抱歉喔，我最近才開始正在努力學習中，還沒有辦法回答您詢問的問題，或者您可以先問問看金融科技是什麼"
+#define RESP_WORD_UNKNOW2                   "我還需要再多吃一點資料才能理解您說的，所以先請旁邊的工作人員協助您解惑喔！或者您可以先問問看監理沙盒怎麼申請"
+#define RESP_WORD_UNKNOW3                   "不要為難我嘛，我還在成長階段還沒有學到那，所以先請旁邊的工作人員協助您解惑喔 或者您可以先問問看園區有什麼團隊"
 #define RESP_WORD_END1                      " 若還想深入了解可以在詢問園區人員喔"
 #define RESP_WORD_END2                      " 這樣的回覆還有哪裡不了解嗎"
 #define RESP_WORD_END3                      " 有不理解的地方嗎 還有什麼想問的嗎"
@@ -53,7 +53,9 @@
 #define DB_CONN_TIMEOUT             "5"
 #define SQL_QUERY_INTENT            "SELECT intent,keyword,table_name FROM "
 #define SQL_QUERY_INTENT_ORDER      " ORDER BY length(keyword) DESC"
-#define SQL_QUERY_REPLIES           "SELECT reply FROM replies WHERE intent_id = "
+#define SQL_QUERY_REPLIES           "SELECT reply,image FROM replies WHERE intent_id = "
 #define SQL_INSERT_UNKNOW_START     "INSERT INTO legal.unknow (input) VALUES ('"
 #define SQL_INSERT_UNKNOW_END       "')"
+#define SQL_INSERT_HISTORY_START    "INSERT INTO legal.history (input,reply,image,state) VALUES ('"
+#define SQL_INSERT_HISTORY_END      "',0)"
 
