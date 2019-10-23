@@ -127,6 +127,7 @@ void AssistantWindow::initLayout()
 
 void AssistantWindow::slotQueryShow()
 {
+    string strFile;
     string strSQL;
     list<map<string, string> > listData;
     list<map<string, string> >::iterator i;
@@ -156,7 +157,10 @@ void AssistantWindow::slotQueryShow()
         strData.sprintf("showText('%s')",(*i)["reply"].c_str());
         webBook->page()->runJavaScript(strData);
 
-        strData.sprintf("showImage('images/%s')",(*i)["image"].c_str());
+        strFile = (*i)["image"];
+        if(0 >= strFile.length())
+            strFile = "default.png";
+        strData.sprintf("showImage('images/%s')",strFile.c_str());
         webBook->page()->runJavaScript(strData);
 
         webTalk->page()->runJavaScript("play()");
