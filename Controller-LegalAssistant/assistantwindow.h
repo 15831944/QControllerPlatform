@@ -2,6 +2,7 @@
 #define ASSISTANTWINDOW_H
 
 #include <QMainWindow>
+#include <QtMultimedia/QMediaPlayer>
 
 class CMysqlHandler;
 
@@ -30,6 +31,7 @@ private:
     QTimer *timerQueryShow;
     QTimer *timerStopTalk;
     CMysqlHandler *mysql;
+    QMediaPlayer *player;
 
 public: signals:
     void singalsShowText(QString strText);
@@ -37,6 +39,7 @@ public: signals:
 public slots:
     void slotQueryShow();
     void slotStopTalk();
+    void playerState(QMediaPlayer::State state);
 
 };
 

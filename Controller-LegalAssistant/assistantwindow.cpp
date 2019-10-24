@@ -19,13 +19,14 @@
 #include "config.h"
 #include <string>
 
+
 using namespace std;
 
 #define WEB_FINTECH "https://www.fintechspace.com.tw"
 
 AssistantWindow::AssistantWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::AssistantWindow),webTalk(new CWebWidget(this)),webBook(new CWebWidget(this)),webNews(new CWebWidget(this)),mysql(new CMysqlHandler),timerQueryShow(0),timerStopTalk(0)
+    ui(new Ui::AssistantWindow),webTalk(new CWebWidget(this)),webBook(new CWebWidget(this)),webNews(new CWebWidget(this)),mysql(new CMysqlHandler),timerQueryShow(0),timerStopTalk(0),player(0)
 {
     QString strPath;
 
@@ -62,6 +63,8 @@ AssistantWindow::AssistantWindow(QWidget *parent) :
     timerQueryShow->start(1000);
 
     mysql->connect(DB_IP, DB_DATABASE, DB_USER, DB_PASSWORD, DB_CONN_TIMEOUT);
+    player = new QMediaPlayer;
+    //connect(player,SIGNAL(stateChanged),this,SLOT(playerState));
 }
 
 AssistantWindow::~AssistantWindow()
@@ -72,6 +75,9 @@ AssistantWindow::~AssistantWindow()
     }
     timerQueryShow->stop();
     timerStopTalk->stop();
+    player->stop();
+
+    delete player;
     delete timerQueryShow;
     delete timerStopTalk;
     delete mysql;
@@ -170,6 +176,11 @@ void AssistantWindow::slotQueryShow()
         if(30 < nTalkSec)
             nTalkSec = 30;
         timerStopTalk->start(nTalkSec * 1000);
+
+        player->stop();
+        player->setMedia(QUrl::fromLocalFile("/root/下載/語音測試/10004_FinTechSpace在哪？.wav"));
+        player->setVolume(50);
+        player->play();
        // _log("[AssistantWindow] slotQueryShow start play talk and show reply on left page. talk second:%d",nTalkSec);
     }
 }
@@ -178,4 +189,20 @@ void AssistantWindow::slotStopTalk()
 {
     timerStopTalk->stop();
     webTalk->page()->runJavaScript("stop()");
+}
+
+void AssistantWindow::playerState(QMediaPlayer::State state)
+{
+    switch(state)
+    {
+    case QMediaPlayer::StoppedState:
+        _log("StoppedState");
+        break;
+    case QMediaPlayer::PlayingState:
+        _log("PlayingState");
+        break;
+    case QMediaPlayer::PausedState:
+        _log("PausedState");
+        break;
+    }
 }
