@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtMultimedia/QMediaPlayer>
 
+
 class CMysqlHandler;
 
 namespace Ui {
@@ -19,10 +20,12 @@ class AssistantWindow : public QMainWindow
 public:
     explicit AssistantWindow(QWidget *parent = nullptr);
     ~AssistantWindow();
+    void showText(std::string strInput,std::string strResp,std::string strImage, int nIntentId);
 
 private:
     void initLayout();
     void initWeb(CWebWidget *webwidget);
+
 private:
     Ui::AssistantWindow *ui;
     CWebWidget *webTalk;
@@ -32,15 +35,17 @@ private:
     QTimer *timerStopTalk;
     CMysqlHandler *mysql;
     QMediaPlayer *player;
+    QString strPathSound;
 
 public: signals:
-    void singalsShowText(QString strText);
+    void signalShowText(QString strInput,QString strResp,QString strImage, int nIntentId);
 
 public slots:
     void slotQueryShow();
     void slotStopTalk();
-    void playerState(QMediaPlayer::State state);
-
+    void stateChanged(QMediaPlayer::State state);
+    void positionChanged(qint64 position);
+    void slotShowText(QString strInput,QString strResp,QString strImage, int nIntentId);
 };
 
 #endif // ASSISTANTWINDOW_H

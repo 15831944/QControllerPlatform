@@ -18,6 +18,7 @@ public:
     explicit CAssistant();
     virtual ~CAssistant();
     void runAnalysis(const char *szInput, std::string &strResp);
+    void runAnalysis(INTENT &stIntent);
     void init();
 
 private:

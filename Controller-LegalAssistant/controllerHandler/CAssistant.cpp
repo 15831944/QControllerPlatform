@@ -28,7 +28,7 @@ void CAssistant::init()
     fuzzyWord->init();
 }
 
-void CAssistant::runAnalysis(const char *szInput, std::string &strResp)
+void CAssistant::runAnalysis(INTENT &stIntent)
 {
     int nIntent = -1;
     int nCount = 0;
@@ -36,44 +36,47 @@ void CAssistant::runAnalysis(const char *szInput, std::string &strResp)
     string strValue;
     CMysqlHandler *mysql;
     map<string, string> mapItem;
-    INTENT intentInfo;
 
-    intentInfo.init();
-    intentInfo.strOringe = szInput;
-    intentInfo.strInput = trim(szInput);
+    stIntent.strInput = trim(stIntent.strOringe);
 
-    if(0 == intentInfo.strInput.compare("更新"))
+    if(0 == stIntent.strInput.compare("更新"))
     {
         init();
-        strResp = "資料庫已更新完畢";
+        stIntent.strResp = "資料庫已更新完畢";
         return;
     }
-
-
 
     mysql = new CMysqlHandler();
     if (TRUE == mysql->connect(DB_IP, DB_DATABASE, DB_USER, DB_PASSWORD, DB_CONN_TIMEOUT))
     {
         //================ Fuzzy Word Filter =============//
-        fuzzyWord->runAnalysis(intentInfo);
-        intentInfo.strTable = "intent";
+        fuzzyWord->runAnalysis(stIntent);
+        stIntent.strTable = "intent";
 
         //================ Intent Analysis ===============//
-        intentTree(intentInfo,mysql);
+        intentTree(stIntent,mysql);
         //intentTree(intentInfo);
 
         //================ Response Word =================//
-        getReply(intentInfo,mysql);
-        strResp = intentInfo.strResp;
-        history(intentInfo,mysql);
+        getReply(stIntent,mysql);
+        history(stIntent,mysql);
         mysql->close();
     }
     else
     {
         _log("[CAssistant] intentTree mysql connect fail: %s %s %s %s",DB_IP, DB_DATABASE, DB_USER, DB_PASSWORD);
-        strResp = RESP_WORD_DATABASE_ERROR;
+        stIntent.strResp = RESP_WORD_DATABASE_ERROR;
     }
     delete mysql;
+}
+
+void CAssistant::runAnalysis(const char *szInput, std::string &strResp)
+{
+    INTENT intent;
+    intent.init();
+    intent.strOringe = szInput;
+    runAnalysis(intent);
+    strResp = intent.strResp;
 }
 
 
@@ -107,8 +110,8 @@ void CAssistant::intentTree(INTENT &intentInfo,CMysqlHandler *mysql)
                      intentInfo.nIntent_id = atoi((*i)["intent"].c_str());
                      intentInfo.listKeyWord.push_back(j->second);
                      intentInfo.strTable = (*i)["table_name"];
-                     _log("[CAssistant] intentTree word march intent: %d keyword: %s table: %s\n", intentInfo.nIntent_id,j->second.c_str(),intentInfo.strTable.c_str());
-                     if(1000 > intentInfo.nIntent_id && 20 > intentInfo.nCount)
+                     _log("[CAssistant] intentTree word march intent: %d keyword: %s table: %s count:%d\n", intentInfo.nIntent_id,j->second.c_str(),intentInfo.strTable.c_str(),intentInfo.nCount);
+                     if(1000 > intentInfo.nIntent_id && 50 > intentInfo.nCount)
                         intentTree(intentInfo,mysql);
                      return;
                  }
@@ -198,59 +201,3 @@ void CAssistant::history(INTENT &intentInfo, CMysqlHandler *mysql)
     mysql->sqlExec(outStream.str());
     _log("[CAssistant] history SQL:%s",outStream.str().c_str());
 }
-
-
-
-
-/*
-void CAssistant::intentTree(INTENT &intentInfo)
-{
-    CMysqlHandler *mysql;
-    ostringstream outStream;
-    list<map<string, string> > listData;
-    string strSQL;
-    string strBefTable;
-    list<map<string, string> >::iterator i;
-    map<string, string>::iterator j;
-    int nCount;
-
-    mysql = new CMysqlHandler();
-    if (TRUE == mysql->connect(DB_IP, DB_DATABASE, DB_USER, DB_PASSWORD, DB_CONN_TIMEOUT))
-    {
-        nCount = 0;
-        while(1000 > intentInfo.nIntent_id)
-        {
-INTENT_HERE:
-            outStream.str("");
-            outStream.clear();
-            outStream << SQL_QUERY_INTENT << intentInfo.strTable << SQL_QUERY_INTENT_ORDER;
-            strBefTable = intentInfo.strTable;
-            strSQL = outStream.str();
-            _log("[CAssistant] intentTree SQL: %s", strSQL.c_str());
-            listData.clear();
-            mysql->query(strSQL.c_str(), listData);
-            for ( i = listData.begin(); i != listData.end(); ++i) // records
-            {
-                for ( j = i->begin(); j != i->end(); ++j) // fields
-                {
-                    if (0 == j->first.compare("keyword") ) // find keyword field name
-                    {
-                         if(0 < findAllOccurances(intentInfo.strInput, j->second))
-                         {
-                             intentInfo.nIntent_id = atoi((*i)["intent"].c_str());
-                             intentInfo.listKeyWord.push_back(j->second);
-                             intentInfo.strTable = (*i)["table_name"];
-                             _log("[CAssistant] intentTree word march intent: %d keyword: %s table: %s\n", intentInfo.nIntent_id,j->second.c_str(),intentInfo.strTable.c_str());
-                             goto INTENT_HERE;
-                         }
-                     }
-                }
-            }
-            if(20 < ++nCount || 0 == strBefTable.compare(intentInfo.strTable))
-                break;
-        }
-        mysql->close();
-    }
-    delete mysql;
-}
-*/

@@ -107,8 +107,11 @@ void CController::showMainWindow()
 
 void CController::onAssistantRequest(const int nSocketFD, const int nSequence, const char *szWord)
 {
-    JSONObject jsonResp;
-    string strResp = RESP_WORD_UNKNOW0;
-    chatbot->runAnalysis(szWord,strResp);
-    cmpword->response(nSocketFD, assistant_request, STATUS_ROK, nSequence, strResp.c_str());
+    INTENT intent;
+
+    intent.init();
+    intent.strOringe = szWord;
+    chatbot->runAnalysis(intent);
+    assisantWindow->showText(intent.strInput,intent.strResp,intent.strImage,intent.nIntent_id);
+    cmpword->response(nSocketFD, assistant_request, STATUS_ROK, nSequence, intent.strResp.c_str());
 }
