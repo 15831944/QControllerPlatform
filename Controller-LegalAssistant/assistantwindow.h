@@ -25,6 +25,7 @@ public:
 private:
     void initLayout();
     void initWeb(CWebWidget *webwidget);
+    void service(int nIntent);
 
 private:
     Ui::AssistantWindow *ui;
@@ -33,7 +34,6 @@ private:
     CWebWidget *webNews;
     QTimer *timerQueryShow;
     QTimer *timerStopTalk;
-    CMysqlHandler *mysql;
     QMediaPlayer *player;
     QString strPathSound;
 
@@ -41,7 +41,7 @@ public: signals:
     void signalShowText(QString strInput,QString strResp,QString strImage, int nIntentId);
 
 public slots:
-    void slotQueryShow();
+ //   void slotQueryShow();
     void slotStopTalk();
     void stateChanged(QMediaPlayer::State state);
     void positionChanged(qint64 position);

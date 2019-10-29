@@ -30,6 +30,7 @@ void CAssistant::init()
 
 void CAssistant::runAnalysis(INTENT &stIntent)
 {
+    int nCompare;
     int nIntent = -1;
     int nCount = 0;
     string strField;
@@ -51,11 +52,21 @@ void CAssistant::runAnalysis(INTENT &stIntent)
     {
         //================ Fuzzy Word Filter =============//
         fuzzyWord->runAnalysis(stIntent);
-        stIntent.strTable = "intent";
 
-        //================ Intent Analysis ===============//
-        intentTree(stIntent,mysql);
-        //intentTree(intentInfo);
+        //================ 比對絕對字串 ====================//
+        nCompare = compare(stIntent,mysql);
+        if(0 > nCompare) // service
+        {
+            mysql->close();
+            delete mysql;
+            return;
+        }
+        else if(1000 > nCompare && 0 <= nCompare)
+        {
+            //================ Intent Analysis ===============//
+            stIntent.strTable = "intent";
+            intentTree(stIntent,mysql);
+        }
 
         //================ Response Word =================//
         getReply(stIntent,mysql);
@@ -79,6 +90,24 @@ void CAssistant::runAnalysis(const char *szInput, std::string &strResp)
     strResp = intent.strResp;
 }
 
+int CAssistant::compare(INTENT &intentInfo, CMysqlHandler *mysql)
+{
+    string strSQL;
+    ostringstream outStream;
+    list<map<string, string> > listData;
+    list<map<string, string> >::iterator i;
+
+    outStream << SQL_QUERY_COMPARE_START << intentInfo.strInput << SQL_QUERY_COMPARE_END;
+    strSQL = outStream.str();
+    _log("[CAssistant] compare SQL: %s", strSQL.c_str());
+    mysql->query(strSQL.c_str(), listData);
+    for ( i = listData.begin(); i != listData.end(); ++i) // records
+    {
+        intentInfo.nIntent_id = atoi((*i)["intent"].c_str());
+        break;
+    }
+    return intentInfo.nIntent_id;
+}
 
 void CAssistant::intentTree(INTENT &intentInfo,CMysqlHandler *mysql)
 {
@@ -143,7 +172,7 @@ void CAssistant::getReply(INTENT &intentInfo, CMysqlHandler *mysql)
             outStream.str("");
             outStream.clear();
             outStream << (*i)["reply"] << getEnd();
-            intentInfo.strResp = outStream.str();
+            intentInfo.strResp = trim(outStream.str());
             intentInfo.strImage = (*i)["image"];
             break;
         }

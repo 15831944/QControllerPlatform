@@ -58,4 +58,6 @@
 #define SQL_INSERT_UNKNOW_END       "')"
 #define SQL_INSERT_HISTORY_START    "INSERT INTO legal.history (input,reply,image,state) VALUES ('"
 #define SQL_INSERT_HISTORY_END      "',0)"
+#define SQL_QUERY_COMPARE_START     "SELECT intent FROM legal.compare WHERE keyword = '"
+#define SQL_QUERY_COMPARE_END       "'"
 
